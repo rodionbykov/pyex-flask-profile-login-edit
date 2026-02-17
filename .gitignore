@@ -145,6 +145,7 @@ env.bak/
 venv.bak/
 
 .idea/
+.output.txt
 
 # Spyder project settings
 .spyderproject

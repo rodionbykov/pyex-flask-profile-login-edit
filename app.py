@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 
@@ -44,8 +45,30 @@ def profile():
     employee_id = session.get('employee_id')
     if not employee_id:
         return redirect(url_for('login'))
-    employee = Employee.query.get(employee_id)
+    employee = db.session.get(Employee, employee_id)
     return render_template('profile.html', employee=employee)
+
+@app.route('/profile/edit', methods=['GET', 'POST'])
+def edit_profile():
+    employee_id = session.get('employee_id')
+    if not employee_id:
+        return redirect(url_for('login'))
+    
+    employee = db.session.get(Employee, employee_id)
+    
+    if request.method == 'POST':
+        employee.first_name = request.form.get('first_name')
+        employee.last_name = request.form.get('last_name')
+        birth_date_str = request.form.get('birth_date')
+        if birth_date_str:
+            employee.birth_date = datetime.strptime(birth_date_str, '%Y-%m-%d').date()
+        employee.gender = request.form.get('gender')
+        
+        db.session.commit()
+        flash('Profile updated successfully')
+        return redirect(url_for('profile'))
+        
+    return render_template('edit_profile.html', employee=employee)
 
 @app.route('/logout')
 def logout():
