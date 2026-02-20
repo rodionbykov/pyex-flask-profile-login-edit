@@ -1,3 +1,5 @@
-==== UserMessageImpl #7 ====
-User: 
+User:
 let's work with the project code. I need to add Employee edit form, model code and tests to support editing an Employee. Create tests, create Bootstrap form template.
+
+User:
+Continue to update the code to add new feature. Same as Edit Profile feature, add "Add new Employee" feature. Add new template, add navigation items, add model.
