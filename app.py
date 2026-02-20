@@ -69,6 +69,36 @@ def edit_profile():
         return redirect(url_for('profile'))
         
     return render_template('edit_profile.html', employee=employee)
+    
+@app.route('/employee/add', methods=['GET', 'POST'])
+def add_employee():
+    employee_id = session.get('employee_id')
+    if not employee_id:
+        return redirect(url_for('login'))
+    
+    if request.method == 'POST':
+        employee_number = request.form.get('employee_number')
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        birth_date_str = request.form.get('birth_date')
+        gender = request.form.get('gender')
+        
+        new_employee = Employee(
+            employee_number=employee_number,
+            first_name=first_name,
+            last_name=last_name,
+            gender=gender
+        )
+        
+        if birth_date_str:
+            new_employee.birth_date = datetime.strptime(birth_date_str, '%Y-%m-%d').date()
+            
+        db.session.add(new_employee)
+        db.session.commit()
+        flash('Employee added successfully')
+        return redirect(url_for('profile'))
+        
+    return render_template('add_employee.html')
 
 @app.route('/logout')
 def logout():
